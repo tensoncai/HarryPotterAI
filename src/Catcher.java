@@ -7,6 +7,13 @@ public class Catcher {
 	                  		 // catcher is designed can only change its direction at a junction
 	private int speed;        // define the moving speed
 	private char name;
+	
+	public Catcher(char name, int x, int y, int direction) {
+		this.name = name;
+		this.x = x;
+		this.y = y;
+		this.direction = direction;
+	}
 
 	public Catcher(char name, int x, int y, int direction, int speed) {
 		this.name = name;

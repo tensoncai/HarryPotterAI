@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
@@ -13,8 +15,26 @@ public class Main {
 		 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 				};
 		
-		Map m = new Map();
+		int[][] board1 = {
+				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+		 		{0, 1, 1, 1, 1, 1, 1, 1, 1, 0}, 
+		 		{0, 1, 1, 1, 1, 1, 1, 1, 1, 0}, 
+		 		{0, 1, 1, 1, 1, 1, 1, 1, 1, 0}, 
+		 		{0, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+		 		{0, 1, 1, 1, 1, 1, 1, 1, 1, 0}, 
+		 		{0, 1, 1, 1, 1, 1, 1, 1, 1, 0}, 
+		 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+				};
+		
+		Seeker s = new Seeker('H', 1, 1);
+		Catcher c = new Catcher('D', 5, 5, 1);
+		List<Catcher> catchers = new ArrayList<Catcher>();
+		catchers.add(c);
+		Map m = new Map(s, catchers);
+		m.initMap();
 		m.printMap();
+		m.calculateMapHeuristics();
+		m.printHeuristicMap();
 		
 //		Seeker h = new Seeker(new Location(2, 1), 2);
 //		Catcher d = new Catcher(new Location(2, 3), 1, 1);

@@ -14,6 +14,12 @@ public class Seeker {
 		this.speed = speed;
 	}
 	
+	public Seeker(char name, int x, int y) {
+		this.name = name;
+		this.x = x;
+		this.y = y;
+	}
+	
 	public int getX() {
 		return x;
 	}
