@@ -10,8 +10,8 @@ public class Map {
 	// 4: Dumbledore
 	// 5: Snape
 	
-	private final int ROWS = 100;
-	private final int COLS = 100;
+	private final int ROWS = 8;
+	private final int COLS = 8;
 	
 	private int [][] map;
 	private int [][] distanceFromStart;
@@ -32,11 +32,12 @@ public class Map {
 	};*/
 
 	
-	public Map() {
+	public Map(Seeker s, List<Catcher> catchers) {
 		map = new int[ROWS][COLS];
 		distanceFromStart = new int[ROWS][COLS];
 		distanceFromGoal = new int[ROWS][COLS];
-		catchers = new ArrayList<Catcher>();
+		harry = s;
+		this.catchers = catchers;
 	}
 
 	public Seeker getSeeker() {
