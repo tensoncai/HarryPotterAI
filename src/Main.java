@@ -27,15 +27,15 @@ public class Main {
 			System.out.println();
 		}
 		
-		Seeker s = new Seeker('H', 1, 1);
-		Catcher c = new Catcher('D', 5, 5, 1);
-		List<Catcher> catchers = new ArrayList<Catcher>();
-		catchers.add(c);
-		Map m1 = new Map(s, catchers);
-		m1.initMap1();
-		m1.printMap();
-		m1.calculateMapHeuristics();
-		m1.printHeuristicMap();
+//		Seeker s = new Seeker('H', 1, 1);
+//		Catcher c = new Catcher('D', 5, 5, 1);
+//		List<Catcher> catchers = new ArrayList<Catcher>();
+//		catchers.add(c);
+//		Map m1 = new Map(s, catchers);
+//		m1.initMap1();
+//		m1.printMap();
+//		m1.calculateMapHeuristics();
+//		m1.printHeuristicMap();
 
 
 //		Seeker h = new Seeker(new Location(2, 1), 2);

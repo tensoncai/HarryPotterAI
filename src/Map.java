@@ -136,7 +136,7 @@ public class Map {
 			for (int y = catcherY - 2; y < catcherY + 2; y++) {
 				for (int x = catcherX - 2; x < catcherX + 2; x++) {
 					System.out.println("HI");
-					if (isValidLocation(x, y)) {
+					if (isRoad(y, x)) {
 						int distance = Math.abs(x - catcherX) + Math.abs(y - catcherY);
 						System.out.println("distance = " + distance);
 						heuristicMap[y][x] = heuristicMap[y][x] + (1000 / (distance + 1));
@@ -147,15 +147,6 @@ public class Map {
 		}
 
 		return heuristicMap;
-	}
-
-	private boolean isValidLocation(int x, int y) {
-		if (y < ROWS && x < COLS && map[y][x] == 1) {
-			System.out.println("HEY");
-			return true;
-		}
-
-		return false;
 	}
 
 	public void printHeuristicMap() {
@@ -183,7 +174,7 @@ public class Map {
 
 	// justify a location is road or not
 	public boolean isRoad(int x, int y) {
-		if(x < ROWS && y < COLS) {
+		if(x > -1 && x < ROWS && y > -1 && y < COLS) {
 			if(map[x][y] != 0) {
 				return true;
 			}
