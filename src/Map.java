@@ -118,6 +118,32 @@ public class Map {
 		}
 	}
 
+	public void updateDistFromGoal(int x, int y) {
+		distFromGoal[x][y] = 0;
+		Location s = new Location(x, y);
+		ArrayList<Location> queue = new ArrayList<Location>();
+		queue.add(s);
+		while (!queue.isEmpty()) {
+			Location tmpLoc = queue.remove(0);
+			int tmpX = tmpLoc.getX();
+			int tmpY = tmpLoc.getY();
+			for (int i = -1; i < 2; i = i+2) {
+				if(isRoad(tmpX+i, tmpY) && distFromGoal[tmpX+i][tmpY] == -1) {
+					distFromGoal[tmpX+i][tmpY] = distFromGoal[tmpX][tmpY] + 1;
+					queue.add(new Location(tmpX+i, tmpY));
+				}
+			}
+			for (int j = -1; j < 2; j = j+2) {
+				if(isRoad(tmpX, tmpY+j) && distFromGoal[tmpX][tmpY+j] == -1) {
+					distFromGoal[tmpX][tmpY+j] = distFromGoal[tmpX][tmpY] + 1;
+					queue.add(new Location(tmpX, tmpY+j));
+				}
+			}
+
+			System.out.println();
+		}
+	}
+
 
 	public int[][] calculateMapHeuristics() {
 		heuristicMap = new int[ROWS][COLS];
@@ -202,4 +228,17 @@ public class Map {
 		}
 	}
 
+	
+
+	
+	// justify a location is road or not
+	public boolean isValidMove(int x, int y) {
+		if(x > -1 && x < ROWS && y > -1 && y < COLS) {
+			if(map[x][y] == 1) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

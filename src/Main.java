@@ -43,6 +43,7 @@ public class Main {
 //		Catcher s = new Catcher(new Location(1, 6), 3, 1);
 //		State state = new State(board, h, d, s);
 //		state.printBoard();
+		
 
 	}
 
