@@ -20,6 +20,7 @@ public class Map {
 
 	private Seeker harry;
 	private List<Catcher> catchers;
+	private Goal peter;
 
 
 
@@ -32,13 +33,15 @@ public class Map {
 
 
 
-	public Map(Seeker s, List<Catcher> catchers) {
-		map = initMap();
+	public Map(Seeker s, List<Catcher> catchers, Goal g) {
+		map = new int[ROWS][COLS];
+		harry = s;
+		this.catchers = catchers;
+		peter = g;
+		initMap1();
 		distFromStart = new int[ROWS][COLS];
 		distFromGoal = new int[ROWS][COLS];
 		initDistMatrix();
-		harry = s;
-		this.catchers = catchers;
 	}
 
 
@@ -114,7 +117,7 @@ public class Map {
 				}
 			}
 
-			System.out.println();
+//			System.out.println();
 		}
 	}
 
@@ -140,7 +143,7 @@ public class Map {
 				}
 			}
 
-			System.out.println();
+//			System.out.println();
 		}
 	}
 
@@ -158,18 +161,15 @@ public class Map {
 			Catcher catcher = catchers.get(i);
 			int catcherY = catcher.getY();
 			int catcherX = catcher.getX();
-			System.out.println("HERE");
+			
 			for (int y = catcherY - 2; y < catcherY + 2; y++) {
 				for (int x = catcherX - 2; x < catcherX + 2; x++) {
-					System.out.println("HI");
 					if (isRoad(y, x)) {
 						int distance = Math.abs(x - catcherX) + Math.abs(y - catcherY);
-						System.out.println("distance = " + distance);
 						heuristicMap[y][x] = heuristicMap[y][x] + (1000 / (distance + 1));
 					}
 				}
 			}
-
 		}
 
 		return heuristicMap;
@@ -196,6 +196,12 @@ public class Map {
 				}
 			}
 		}
+		
+		map[peter.getY()][peter.getX()] = 3;
+		map[harry.getY()][harry.getX()] = 2;
+		for (int i = 0; i < catchers.size(); i++) {
+			map[catchers.get(i).getY()][catchers.get(i).getX()] = 4;
+		}
 	}
 
 	// justify a location is road or not
@@ -206,6 +212,26 @@ public class Map {
 			}
 		}
 		return false;
+	}
+	
+	public void printDistFromStart() {
+		for (int i = 0; i < ROWS; i++) {
+			for (int j = 0; j < COLS; j++) {
+				System.out.print(" " + distFromStart[j][i]);
+			}
+			
+			System.out.println();
+		}
+	}
+	
+	public void printDistFromGoal() {
+		for (int i = 0; i < ROWS; i++) {
+			for (int j = 0; j < COLS; j++) {
+				System.out.print(" " + distFromGoal[j][i]);
+			}
+			
+			System.out.println();
+		}
 	}
 
 	public void printMap() {
@@ -228,6 +254,37 @@ public class Map {
 		}
 	}
 
+	
+	public void moveHarry() {
+		int r = harry.getY();
+		int c = harry.getX();
+		int lowestHeuristicValue = Integer.MAX_VALUE;
+		
+		map[r][c] = 1;
+		
+		if (isValidMove(r - 1, c) && heuristicMap[r - 1][c] < lowestHeuristicValue) {
+			lowestHeuristicValue = heuristicMap[r - 1][c];
+			harry.setX(c);
+			harry.setY(r - 1);
+		}
+		if (isValidMove(r + 1, c) && heuristicMap[r + 1][c] < lowestHeuristicValue) {
+			lowestHeuristicValue = heuristicMap[r + 1][c];
+			harry.setX(c);
+			harry.setY(r + 1);
+		}
+		if (isValidMove(r, c - 1) && heuristicMap[r][c - 1] < lowestHeuristicValue) {
+			lowestHeuristicValue = heuristicMap[r][c - 1];
+			harry.setX(c - 1);
+			harry.setY(r);
+		}
+		if (isValidMove(r, c + 1) && heuristicMap[r][c + 1] < lowestHeuristicValue) {
+			lowestHeuristicValue = heuristicMap[r][c + 1];
+			harry.setX(c + 1);
+			harry.setY(r);
+		}
+		
+		map[harry.getY()][harry.getX()] = 2;
+	}
 	
 
 	
