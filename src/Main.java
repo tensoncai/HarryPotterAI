@@ -2,31 +2,55 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-
+	
 	public static void main(String[] args) {
-		/*int[][] board = {
-				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		 		{0, 1, 1, 1, 1, 1, 3, 0, 5, 0},
-		 		{0, 2, 0, 1, 0, 0, 1, 1, 1, 0},
-		 		{0, 1, 1, 1, 1, 0, 1, 0, 0, 0},
-		 		{0, 1, 0, 0, 1, 0, 1, 0, 0, 0},
-		 		{0, 1, 1, 4, 1, 0, 1, 0, 0, 0},
-		 		{0, 1, 0, 1, 1, 1, 1, 1, 1, 0},
-		 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-				}; */
-
+		
+		int steps = 20;
 		Map m = new Map();
-		//m.printMap();
-		m.updateDistFromStart(2, 1);
-
-		int[][] tmpMatrix = m.getDistFromStart();
-		for (int i = 0; i < m.getROWS(); i++) {
-			for (int j = 0; j < m.getCOLS(); j++) {
-				System.out.print(tmpMatrix[i][j] + " ");
-			}
+		
+		while(steps > 0) {
+			Catcher tmpCatcher = m.getCatchers().remove(0);
+			// empty its current location
+			m.updateMap(tmpCatcher.getY(), tmpCatcher.getX(), 1);
+			tmpCatcher = m.randomWalk(tmpCatcher);
+			m.updateMap(tmpCatcher.getY(), tmpCatcher.getX(), 4);
+			List<Catcher> tmpCatchers = new ArrayList<Catcher>();
+			tmpCatchers.add(tmpCatcher);
+			m.setCatchers(tmpCatchers);
+			m.printMap();
+			steps--;
 			System.out.println();
 		}
 		
+		
+		
+		
+		
+//		/*int[][] board = {
+//				{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//		 		{0, 1, 1, 1, 1, 1, 3, 0, 5, 0},
+//		 		{0, 2, 0, 1, 0, 0, 1, 1, 1, 0},
+//		 		{0, 1, 1, 1, 1, 0, 1, 0, 0, 0},
+//		 		{0, 1, 0, 0, 1, 0, 1, 0, 0, 0},
+//		 		{0, 1, 1, 4, 1, 0, 1, 0, 0, 0},
+//		 		{0, 1, 0, 1, 1, 1, 1, 1, 1, 0},
+//		 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+//				}; */
+//
+//		Map m = new Map();
+//		//m.printMap();
+//		m.updateDistFromStart(2, 1);
+//
+//		int[][] tmpMatrix = m.getDistFromStart();
+//		for (int i = 0; i < m.getROWS(); i++) {
+//			for (int j = 0; j < m.getCOLS(); j++) {
+//				System.out.print(tmpMatrix[i][j] + " ");
+//			}
+//			System.out.println();
+//		}
+		
+	
+	
 //		Seeker s = new Seeker('H', 1, 1);
 //		Catcher c = new Catcher('D', 5, 5, 1);
 //		List<Catcher> catchers = new ArrayList<Catcher>();

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Map {
 	// current board configuration
@@ -22,14 +23,16 @@ public class Map {
 	private List<Catcher> catchers;
 
 
-
+    // Qing's test
 	public Map() {
 		map = initMap();
 		distFromStart = new int[ROWS][COLS];
 		distFromGoal = new int[ROWS][COLS];
 		initDistMatrix();
+		Catcher d = new Catcher('d', 4, 1, 2);
+		this.catchers = new ArrayList<Catcher>();
+		catchers.add(d);
     }
-
 
 
 	public Map(Seeker s, List<Catcher> catchers) {
@@ -44,19 +47,27 @@ public class Map {
 
 	public int[][] initMap() {
 		int[][] map = {
-		{0, 0, 0, 0, 0, 0, 0, 0},
- 		{0, 1, 1, 1, 3, 0, 5, 0},
- 		{0, 2, 0, 1, 0, 0, 1, 0},
+		{0, 1, 0, 0, 0, 0, 0, 0},
+ 		{0, 1, 1, 1, 4, 0, 1, 0},
+ 		{0, 1, 0, 1, 0, 0, 1, 0},
  		{0, 1, 1, 1, 1, 0, 1, 0},
- 		{0, 1, 0, 0, 1, 0, 1, 0},
- 		{0, 1, 1, 4, 1, 0, 1, 0},
- 		{0, 1, 0, 1, 1, 1, 1, 0},
- 		{0, 0, 0, 0, 0, 0, 0, 0}
+ 		{0, 1, 0, 0, 1, 1, 1, 0},
+ 		{0, 1, 1, 1, 1, 0, 1, 1},
+ 		{0, 1, 0, 1, 1, 1, 1, 1},
+ 		{0, 0, 0, 1, 0, 0, 0, 1}
 		};
 		return map;
 	}
+	
+	// y represents rows
+	public void updateMap(int y, int x, int value) {
+		//System.out.println("value:" + map[y][x]);
+		map[y][x] = value;
+	}
 
 
+	
+	
 	public void initDistMatrix() {
 		for (int r = 0; r < ROWS; r++) {
 			for (int c = 0; c < COLS; c++) {
@@ -76,6 +87,16 @@ public class Map {
 
 	public Seeker getSeeker() {
 		return harry;
+	}
+	
+	public  List<Catcher> getCatchers(){
+		return catchers;
+	}
+	
+	// add some catcher back after update
+	public void setCatchers(List<Catcher> catchers){
+		this.catchers.clear();
+		this.catchers = catchers;
 	}
 
 	public int [][] getDistFromStart(){
@@ -229,6 +250,241 @@ public class Map {
 	}
 
 	
+	/* random walk controller for the catchers
+	 * @param
+	 */
+	public Catcher randomWalk(Catcher c) {
+		int tmpY = c.getY();
+		int tmpX = c.getX();
+		int drc = c.getDirection();    // current walking direction
+		
+		// moving up currently
+		if (drc == 1) {
+			// if not a junction
+			if (!isValidMove(tmpY, tmpX-1) && !isValidMove(tmpY, tmpX+1)) {
+				// if it can continue walking towards its current direction
+				if (isValidMove(tmpY-1, tmpX)) {
+					return new Catcher(c.getName(), tmpX, tmpY-1, 1, c.getSpeed());
+				}
+				// otherwise go back (direction changes to 2)
+				else {
+					return new Catcher(c.getName(), tmpX, tmpY+1, 2, c.getSpeed());				
+				}
+			}
+			// if reach a junction
+			else {
+				Random ran = new Random();
+				int choice = ran.nextInt(3);		// choice can be 0,1,2
+				
+				// if choice == 0, then try left direction first
+				if (choice == 0) {
+					// 1st try
+					if (isValidMove(tmpY, tmpX-1)) {
+						return new Catcher(c.getName(), tmpX-1, tmpY, 3, c.getSpeed());
+					}
+					// 2nd try
+					if (isValidMove(tmpY, tmpX+1)) {
+						return new Catcher(c.getName(), tmpX+1, tmpY, 4, c.getSpeed());
+					}
+				}
+				// if choice == 1, then try right direction first
+				else if (choice == 1) {
+					if (isValidMove(tmpY, tmpX+1)) {
+						return new Catcher(c.getName(), tmpX+1, tmpY, 4, c.getSpeed());
+					}
+					if (isValidMove(tmpY-1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY-1, 1, c.getSpeed());
+					}
+					if (isValidMove(tmpY, tmpX-1)) {
+						return new Catcher(c.getName(), tmpX-1, tmpY, 3, c.getSpeed());
+					}			
+				}
+				// choice == 2, then try keep current direction first 
+				else {
+					if (isValidMove(tmpY-1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY-1, 1, c.getSpeed());
+					}
+					if (isValidMove(tmpY, tmpX-1)) {
+						return new Catcher(c.getName(), tmpX-1, tmpY, 3, c.getSpeed());
+					}	
+					if (isValidMove(tmpY, tmpX+1)) {
+						return new Catcher(c.getName(), tmpX+1, tmpY, 4, c.getSpeed());
+					}
+				}
+			}
+		}
+		
+		// moving down currently
+		else if (drc == 2) {
+			// if not a junction
+			if (!isValidMove(tmpY, tmpX-1) && !isValidMove(tmpY, tmpX+1)) {
+				// if it can continue walking towards its current direction
+				if (isValidMove(tmpY+1, tmpX)) {
+					return new Catcher(c.getName(), tmpX, tmpY+1, 2, c.getSpeed());	
+				}
+				// otherwise go back (direction changes to 2)
+				else {
+					return new Catcher(c.getName(), tmpX, tmpY-1, 1, c.getSpeed());			
+				}
+			}
+			// if reach a junction
+			else {
+				Random ran = new Random();
+				int choice = ran.nextInt(3);		// choice can be 0,1,2
+				
+				// if choice == 0, then try left direction first
+				if (choice == 0) {
+					// 1st try
+					if (isValidMove(tmpY, tmpX-1)) {
+						return new Catcher(c.getName(), tmpX-1, tmpY, 3, c.getSpeed());
+					}
+					// 2nd try
+					if (isValidMove(tmpY, tmpX+1)) {
+						return new Catcher(c.getName(), tmpX+1, tmpY, 4, c.getSpeed());
+					}
+				}
+				// if choice == 1, then try right direction first
+				else if (choice == 1) {
+					if (isValidMove(tmpY, tmpX+1)) {
+						return new Catcher(c.getName(), tmpX+1, tmpY, 4, c.getSpeed());
+					}
+					if (isValidMove(tmpY+1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY+1, 2, c.getSpeed());	
+					}
+					if (isValidMove(tmpY, tmpX-1)) {
+						return new Catcher(c.getName(), tmpX-1, tmpY, 3, c.getSpeed());
+					}			
+				}
+				// choice == 2, then try keep current direction first 
+				else {
+					if (isValidMove(tmpY+1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY+1, 2, c.getSpeed());	
+					}
+					if (isValidMove(tmpY, tmpX-1)) {
+						return new Catcher(c.getName(), tmpX-1, tmpY, 3, c.getSpeed());
+					}	
+					if (isValidMove(tmpY, tmpX+1)) {
+						return new Catcher(c.getName(), tmpX+1, tmpY, 4, c.getSpeed());
+					}
+				}
+			}
+		}
+		
+		// moving left currently
+		else if (drc == 3) {
+			// if not a junction
+			if (!isValidMove(tmpY-1, tmpX) && !isValidMove(tmpY+1, tmpX)) {
+				// if it can continue walking towards its current direction
+				if (isValidMove(tmpY, tmpX-1)) {
+					return new Catcher(c.getName(), tmpX-1, tmpY, 3, c.getSpeed());	
+				}
+				// otherwise go back (direction changes to 4)
+				else {
+					return new Catcher(c.getName(), tmpX+1, tmpY, 4, c.getSpeed());			
+				}
+			}
+			// if reach a junction
+			else {
+				Random ran = new Random();
+				int choice = ran.nextInt(3);		// choice can be 0,1,2
+				
+				// if choice == 0, then try up direction first
+				if (choice == 0) {
+					// 1st try
+					if (isValidMove(tmpY-1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY-1, 1, c.getSpeed());	
+					}
+					// 2nd try
+					if (isValidMove(tmpY+1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY+1, 2, c.getSpeed());	
+					}
+				}
+				// if choice == 1, then try down direction first
+				else if (choice == 1) {
+					if (isValidMove(tmpY+1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY+1, 2, c.getSpeed());	
+					}
+					if (isValidMove(tmpY, tmpX-1)) {
+						return new Catcher(c.getName(), tmpX-1, tmpY, 3, c.getSpeed());			
+					}				
+					if (isValidMove(tmpY-1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY-1, 1, c.getSpeed());	
+					}
+			
+				}
+				// choice == 2, then try keep current direction first 
+				else {
+					if (isValidMove(tmpY, tmpX-1)) {
+						return new Catcher(c.getName(), tmpX-1, tmpY, 3, c.getSpeed());			
+					}				
+					if (isValidMove(tmpY-1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY-1, 1, c.getSpeed());	
+					}
+					if (isValidMove(tmpY+1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY+1, 2, c.getSpeed());	
+					}
+				}
+			}
+		}
+		
+		// moving right currently
+		else {
+			// if not a junction
+			if (!isValidMove(tmpY-1, tmpX) && !isValidMove(tmpY+1, tmpX)) {
+				// if it can continue walking towards its current direction
+				if (isValidMove(tmpY, tmpX+1)) {
+					return new Catcher(c.getName(), tmpX+1, tmpY, 4, c.getSpeed());	
+				}
+				// otherwise go back (direction changes to 4)
+				else {
+					return new Catcher(c.getName(), tmpX-1, tmpY, 3, c.getSpeed());			
+				}
+			}
+			// if reach a junction
+			else {
+				Random ran = new Random();
+				int choice = ran.nextInt(3);		// choice can be 0,1,2
+				
+				// if choice == 0, then try up direction first
+				if (choice == 0) {
+					// 1st try
+					if (isValidMove(tmpY-1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY-1, 1, c.getSpeed());	
+					}
+					// 2nd try
+					if (isValidMove(tmpY+1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY+1, 2, c.getSpeed());	
+					}
+				}
+				// if choice == 1, then try down direction first
+				else if (choice == 1) {
+					if (isValidMove(tmpY-1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY+1, 2, c.getSpeed());	
+					}
+					if (isValidMove(tmpY, tmpX+1)) {
+						return new Catcher(c.getName(), tmpX+1, tmpY, 4, c.getSpeed());			
+					}				
+					if (isValidMove(tmpY-1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY-1, 1, c.getSpeed());	
+					}
+			
+				}
+				// choice == 2, then try keep current direction first 
+				else {
+					if (isValidMove(tmpY, tmpX+1)) {
+						return new Catcher(c.getName(), tmpX+1, tmpY, 4, c.getSpeed());			
+					}				
+					if (isValidMove(tmpY-1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY-1, 1, c.getSpeed());	
+					}
+					if (isValidMove(tmpY+1, tmpX)) {
+						return new Catcher(c.getName(), tmpX, tmpY+1, 2, c.getSpeed());	
+					}
+				}
+			}
+		}		
+		return null;
+	}
 
 	
 	// justify a location is road or not
