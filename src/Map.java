@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Map {
 	// current board configuration
@@ -11,8 +12,8 @@ public class Map {
 	// 4: Dumbledore
 	// 5: Snape
 
-	private final int ROWS = 8;
-	private final int COLS = 8;
+	private final int ROWS = 21;
+	private final int COLS = 81;
 
 	private int [][] map;
 	private int [][] distFromStart;
@@ -68,9 +69,6 @@ public class Map {
 		//System.out.println("value:" + map[y][x]);
 		map[y][x] = value;
 	}
-
-
-
 
 	public void initDistMatrix() {
 		for (int r = 0; r < ROWS; r++) {
@@ -138,8 +136,6 @@ public class Map {
 					queue.add(new Location(tmpX, tmpY+j));
 				}
 			}
-
-//			System.out.println();
 		}
 	}
 
@@ -164,8 +160,6 @@ public class Map {
 					queue.add(new Location(tmpX, tmpY+j));
 				}
 			}
-
-//			System.out.println();
 		}
 	}
 
@@ -177,7 +171,11 @@ public class Map {
 			for (int j = 0; j < COLS; j++) {
 				// update heuristic only for road
 				if (isRoad(i,j)) {
-					heuristicMap[i][j] = distFromStart[i][j] - 1000 / distFromGoal[i][j];
+//					heuristicMap[i][j] = distFromStart[i][j] - 100000 / distFromGoal[i][j];
+					heuristicMap[i][j] = -10000 / distFromGoal[i][j];
+//					if (distFromGoal[i][j] > 10) {
+//						heuristicMap[i][j] = -10000 / distFromGoal[i][j];
+//					}
 				}
 			}
 		}
@@ -187,11 +185,11 @@ public class Map {
 			int catcherY = catcher.getY();
 			int catcherX = catcher.getX();
 
-			for (int y = catcherY - 2; y < catcherY + 2; y++) {
-				for (int x = catcherX - 2; x < catcherX + 2; x++) {
+			for (int y = catcherY - 3; y < catcherY + 3; y++) {
+				for (int x = catcherX - 3; x < catcherX + 3; x++) {
 					if (isRoad(y, x)) {
 						int distance = Math.abs(x - catcherX) + Math.abs(y - catcherY);
-						heuristicMap[y][x] = heuristicMap[y][x] + (1000 / (distance + 1));
+						heuristicMap[y][x] = heuristicMap[y][x] + (10000 / (distance + 1));
 					}
 				}
 			}
@@ -201,8 +199,8 @@ public class Map {
 	}
 
 	public void printHeuristicMap() {
-		for (int y = 0; y < ROWS; y++) {
-			for (int x = 0; x < COLS; x++) {
+		for (int y = 10; y < ROWS; y++) {
+			for (int x = 65; x <COLS; x++) {
 				System.out.print("     " + heuristicMap[y][x]);
 			}
 
@@ -211,6 +209,8 @@ public class Map {
 	}
 
 	public void initMap1() {
+		
+		// border
 		for (int i = 0; i < ROWS; i++) {
 			for (int j = 0; j < COLS; j++) {
 				if (i == 0 || j == 0 || i == ROWS - 1 || j == COLS - 1) {
@@ -221,11 +221,33 @@ public class Map {
 				}
 			}
 		}
+		
+		for (int r = 0; r < 10; r++) {
+			map[r][5] = 0;
+			map[r][15] = 0;
+			map[r][25] = 0;
+			map[r][35] = 0;
+			map[r][45] = 0;
+			map[r][55] = 0;
+			map[r][65] = 0;
+			map[r][75] = 0;
+		}
+		
+		for (int r = ROWS - 1; r > 9; r--) {
+			map[r][10] = 0;
+			map[r][20] = 0;
+			map[r][30] = 0;
+			map[r][40] = 0;
+			map[r][50] = 0;
+			map[r][60] = 0;
+		}
 
 		map[peter.getY()][peter.getX()] = 3;
 		map[harry.getY()][harry.getX()] = 2;
+		int catNum = 4;
 		for (int i = 0; i < catchers.size(); i++) {
-			map[catchers.get(i).getY()][catchers.get(i).getX()] = 4;
+			map[catchers.get(i).getY()][catchers.get(i).getX()] = catNum;
+			catNum++;
 		}
 	}
 
@@ -242,7 +264,7 @@ public class Map {
 	public void printDistFromStart() {
 		for (int i = 0; i < ROWS; i++) {
 			for (int j = 0; j < COLS; j++) {
-				System.out.print(" " + distFromStart[j][i]);
+				System.out.print(" " + distFromStart[i][j]);
 			}
 
 			System.out.println();
@@ -252,14 +274,14 @@ public class Map {
 	public void printDistFromGoal() {
 		for (int i = 0; i < ROWS; i++) {
 			for (int j = 0; j < COLS; j++) {
-				System.out.print(" " + distFromGoal[j][i]);
+				System.out.print(" " + distFromGoal[i][j]);
 			}
 
 			System.out.println();
 		}
 	}
 
-	public void printMap() {
+	public void printMap() throws InterruptedException {
 		for(int i = 0; i < map.length; i++) {
 			for(int j = 0; j < map[0].length; j++) {
 				if(map[i][j] == 0)
@@ -267,16 +289,28 @@ public class Map {
 				else if (map[i][j] == 1)
 					System.out.print(" ");
 				else if (map[i][j] == 2)
-					System.out.print("H");
+					System.out.print(ConsoleColors.RED_BOLD + "H" +
+							ConsoleColors.RESET);
 				else if (map[i][j] == 3)
-					System.out.print("P");
+					System.out.print(ConsoleColors.CYAN_BOLD + "P" +
+							ConsoleColors.RESET);
 				else if (map[i][j] == 4)
-					System.out.print("D");
+					System.out.print(ConsoleColors.BLUE_BOLD + "D" +
+							ConsoleColors.RESET);
 				else if (map[i][j] == 5)
-					System.out.print("S");
+					System.out.print(ConsoleColors.BLUE_BOLD + "S" +
+							ConsoleColors.RESET);
+				else if (map[i][j] == 6)
+					System.out.print(ConsoleColors.BLUE_BOLD + "L" +
+							ConsoleColors.RESET);
+				else if (map[i][j] == 7)
+					System.out.print(ConsoleColors.BLUE_BOLD + "F" +
+							ConsoleColors.RESET);
 			}
 			System.out.println();
 		}
+		
+		Thread.sleep(200);
 	}
 
 	public void moveHarry() {
@@ -554,6 +588,31 @@ public class Map {
 			}
 		}
 		return false;
+	}
+	
+	// 0 : not terminated
+	// 1 : harry find the goal
+	// 2 : harry is caught
+	public int isTerminal() {
+		int harryY = harry.getY();
+		int harryX = harry.getX();
+		
+		for (int i = 0; i < catchers.size(); i++) {
+			Catcher catcher = catchers.get(i);
+			int catcherY = catcher.getY();
+			int catcherX = catcher.getX();
+			if (Math.abs(harryX-catcherX) + Math.abs(harryY-catcherY) == 1) {
+				return 2;
+			}
+		}
+		
+		int goalY = peter.getY();
+		int goalX = peter.getX();
+		if(Math.abs(harryX-goalX) + Math.abs(harryY-goalY) == 1) {
+			return 1;
+		}
+	
+		return 0;
 	}
 
 }
