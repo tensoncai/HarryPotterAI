@@ -6,7 +6,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		// Melody's code
-		int steps = 20;
+		int steps = 30;
 		Map m = new Map();
 
 		while(steps > 0) {
@@ -23,23 +23,23 @@ public class Main {
 			System.out.println();
 		}
 
-// Tenson's code
-		Goal g = new Goal('P', 5, 3);
-		Seeker s = new Seeker('H', 1, 1);
-		Catcher c = new Catcher('D', 5, 5, 1);
-		List<Catcher> catchers = new ArrayList<Catcher>();
-
-//		catchers.add(c);
-		Map m1 = new Map(s, catchers, g);
-
-		m1.printMap();
-		m1.updateDistFromStart(1, 1);
-		m1.printDistFromStart();
-
-		System.out.println("*************************************");
-
-		m1.updateDistFromGoal(3, 5);
-		m1.printDistFromGoal();
+//        // Tenson's code
+//		Goal g = new Goal('P', 5, 3);
+//		Seeker s = new Seeker('H', 1, 1);
+//		Catcher c = new Catcher('D', 5, 5, 1);
+//		List<Catcher> catchers = new ArrayList<Catcher>();
+//
+//		//catchers.add(c);
+//		Map m1 = new Map(s, catchers, g);
+//
+//		m1.printMap();
+//		m1.updateDistFromStart(1, 1);
+//		m1.printDistFromStart();
+//
+//		System.out.println("*************************************");
+//
+//		m1.updateDistFromGoal(3, 5);
+//		m1.printDistFromGoal();
 
 	}
 

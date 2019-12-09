@@ -515,7 +515,7 @@ public class Map {
 				}
 				// if choice == 1, then try down direction first
 				else if (choice == 1) {
-					if (isValidMove(tmpY-1, tmpX)) {
+					if (isValidMove(tmpY+1, tmpX)) {
 						return new Catcher(c.getName(), tmpX, tmpY+1, 2, c.getSpeed());
 					}
 					if (isValidMove(tmpY, tmpX+1)) {
