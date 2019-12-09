@@ -28,6 +28,7 @@ public class Main {
 		Seeker s = new Seeker('H', 1, 1);
 		Catcher c = new Catcher('D', 5, 5, 1);
 		List<Catcher> catchers = new ArrayList<Catcher>();
+		catchers.add(c);
 		Map m1 = new Map(s, catchers, g);
 
 		m1.printMap();
@@ -44,16 +45,12 @@ public class Main {
 		m1.calculateMapHeuristics();
 		m1.printHeuristicMap();
 		
-		int steps1 = 5;
+		int steps1 = 10;
 		
 		while(steps1 > 0) {
 			m1.moveHarry();
 			m1.printMap();
 			steps1--;
 		}
-		
-
-
 	}
-
 }
