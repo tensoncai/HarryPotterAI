@@ -75,8 +75,8 @@ public class Map {
 	public void initDistMatrix() {
 		for (int r = 0; r < ROWS; r++) {
 			for (int c = 0; c < COLS; c++) {
-				distFromStart[r][c] = -1;
-				distFromGoal[r][c] = -1;
+				distFromStart[r][c] = 0;
+				distFromGoal[r][c] = 0;
 			}
 		}
 	}
@@ -118,7 +118,7 @@ public class Map {
 	 * @param distMatrix: the matrix contains all the distances from start point
 	 */
 	public void updateDistFromStart(int x, int y) {
-		distFromStart[x][y] = 0;
+		distFromStart[x][y] = 1;
 		Location s = new Location(x, y);
 		ArrayList<Location> queue = new ArrayList<Location>();
 		queue.add(s);
@@ -127,13 +127,13 @@ public class Map {
 			int tmpX = tmpLoc.getX();
 			int tmpY = tmpLoc.getY();
 			for (int i = -1; i < 2; i = i+2) {
-				if(isRoad(tmpX+i, tmpY) && distFromStart[tmpX+i][tmpY] == -1) {
+				if(isRoad(tmpX+i, tmpY) && distFromStart[tmpX+i][tmpY] == 0) {
 					distFromStart[tmpX+i][tmpY] = distFromStart[tmpX][tmpY] + 1;
 					queue.add(new Location(tmpX+i, tmpY));
 				}
 			}
 			for (int j = -1; j < 2; j = j+2) {
-				if(isRoad(tmpX, tmpY+j) && distFromStart[tmpX][tmpY+j] == -1) {
+				if(isRoad(tmpX, tmpY+j) && distFromStart[tmpX][tmpY+j] == 0) {
 					distFromStart[tmpX][tmpY+j] = distFromStart[tmpX][tmpY] + 1;
 					queue.add(new Location(tmpX, tmpY+j));
 				}
@@ -144,7 +144,7 @@ public class Map {
 	}
 
 	public void updateDistFromGoal(int x, int y) {
-		distFromGoal[x][y] = 0;
+		distFromGoal[x][y] = 1;
 		Location s = new Location(x, y);
 		ArrayList<Location> queue = new ArrayList<Location>();
 		queue.add(s);
@@ -153,13 +153,13 @@ public class Map {
 			int tmpX = tmpLoc.getX();
 			int tmpY = tmpLoc.getY();
 			for (int i = -1; i < 2; i = i+2) {
-				if(isRoad(tmpX+i, tmpY) && distFromGoal[tmpX+i][tmpY] == -1) {
+				if(isRoad(tmpX+i, tmpY) && distFromGoal[tmpX+i][tmpY] == 0) {
 					distFromGoal[tmpX+i][tmpY] = distFromGoal[tmpX][tmpY] + 1;
 					queue.add(new Location(tmpX+i, tmpY));
 				}
 			}
 			for (int j = -1; j < 2; j = j+2) {
-				if(isRoad(tmpX, tmpY+j) && distFromGoal[tmpX][tmpY+j] == -1) {
+				if(isRoad(tmpX, tmpY+j) && distFromGoal[tmpX][tmpY+j] == 0) {
 					distFromGoal[tmpX][tmpY+j] = distFromGoal[tmpX][tmpY] + 1;
 					queue.add(new Location(tmpX, tmpY+j));
 				}
@@ -174,8 +174,11 @@ public class Map {
 		heuristicMap = new int[ROWS][COLS];
 
 		for (int i = 0; i < ROWS; i++) {
-			for (int j = 0; j < ROWS; j++) {
-				heuristicMap[i][j] = distFromStart[i][j] + distFromGoal[i][j];
+			for (int j = 0; j < COLS; j++) {
+				// update heuristic only for road
+				if (isRoad(i,j)) {
+					heuristicMap[i][j] = distFromStart[i][j] - 1000 / distFromGoal[i][j];
+				}
 			}
 		}
 
@@ -379,7 +382,7 @@ public class Map {
 				if (isValidMove(tmpY+1, tmpX)) {
 					return new Catcher(c.getName(), tmpX, tmpY+1, 2, c.getSpeed());
 				}
-				// otherwise go back (direction changes to 2)
+				// otherwise go back (direction changes to 1)
 				else {
 					return new Catcher(c.getName(), tmpX, tmpY-1, 1, c.getSpeed());
 				}
@@ -492,7 +495,7 @@ public class Map {
 				if (isValidMove(tmpY, tmpX+1)) {
 					return new Catcher(c.getName(), tmpX+1, tmpY, 4, c.getSpeed());
 				}
-				// otherwise go back (direction changes to 4)
+				// otherwise go back (direction changes to 3)
 				else {
 					return new Catcher(c.getName(), tmpX-1, tmpY, 3, c.getSpeed());
 				}
