@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class Map {
@@ -182,16 +184,39 @@ public class Map {
 
 		for (int i = 0; i < catchers.size(); i++) {
 			Catcher catcher = catchers.get(i);
-			int catcherY = catcher.getY();
-			int catcherX = catcher.getX();
+			int y = catcher.getY();
+			int x = catcher.getX();
 
-			for (int y = catcherY - 3; y < catcherY + 3; y++) {
-				for (int x = catcherX - 3; x < catcherX + 3; x++) {
-					if (isRoad(y, x)) {
-						int distance = Math.abs(x - catcherX) + Math.abs(y - catcherY);
-						heuristicMap[y][x] = heuristicMap[y][x] + (10000 / (distance + 1));
+			int[][] enemyRadius = new int[ROWS][COLS];
+			Location root = new Location(x, y);
+			List<Location> queue = new ArrayList<Location>();
+			queue.add(root);
+			
+			while (queue.size() != 0) {
+				Location tmpLocation = queue.remove(0);
+				int tmpX = tmpLocation.getX();
+				int tmpY = tmpLocation.getY();
+				heuristicMap[y][x] = heuristicMap[y][x] + 10000 / (enemyRadius[tmpY][tmpX] + 1);
+				
+				if (enemyRadius[tmpY][tmpX] < 3) {
+					if (isRoad(tmpY - 1, tmpX) && enemyRadius[tmpY - 1][tmpX] == 0) {
+						enemyRadius[tmpY - 1][tmpX] = enemyRadius[tmpY][tmpX] + 1;
+						queue.add(new Location(tmpX, tmpY - 1));
+							
 					}
-				}
+					if (isRoad(tmpY + 1, tmpX) && enemyRadius[tmpY + 1][tmpX] == 0) {
+						enemyRadius[tmpY + 1][tmpX] = enemyRadius[tmpY][tmpX] + 1;
+						queue.add(new Location(tmpX, tmpY + 1));
+					}
+					if (isRoad(tmpY, tmpX - 1) && enemyRadius[tmpY][tmpX - 1] == 0) {
+						enemyRadius[tmpY][tmpX - 1] = enemyRadius[tmpY][tmpX] + 1;
+						queue.add(new Location(tmpX - 1, tmpY));
+					}
+					if (isRoad(tmpY, tmpX + 1) && enemyRadius[tmpY][tmpX + 1] == 0) {
+						enemyRadius[tmpY][tmpX + 1] = enemyRadius[tmpY][tmpX] + 1;
+						queue.add(new Location(tmpX + 1, tmpY));
+					}
+				}	
 			}
 		}
 
