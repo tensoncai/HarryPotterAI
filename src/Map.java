@@ -173,11 +173,7 @@ public class Map {
 			for (int j = 0; j < COLS; j++) {
 				// update heuristic only for road
 				if (isRoad(i,j)) {
-//					heuristicMap[i][j] = distFromStart[i][j] - 100000 / distFromGoal[i][j];
 					heuristicMap[i][j] = -10000 / distFromGoal[i][j];
-//					if (distFromGoal[i][j] > 10) {
-//						heuristicMap[i][j] = -10000 / distFromGoal[i][j];
-//					}
 				}
 			}
 		}
@@ -188,6 +184,7 @@ public class Map {
 			int x = catcher.getX();
 
 			int[][] enemyRadius = new int[ROWS][COLS];
+			
 			Location root = new Location(x, y);
 			List<Location> queue = new ArrayList<Location>();
 			queue.add(root);
@@ -196,7 +193,7 @@ public class Map {
 				Location tmpLocation = queue.remove(0);
 				int tmpX = tmpLocation.getX();
 				int tmpY = tmpLocation.getY();
-				heuristicMap[y][x] = heuristicMap[y][x] + 10000 / (enemyRadius[tmpY][tmpX] + 1);
+				heuristicMap[tmpY][tmpX] = heuristicMap[tmpY][tmpX] + (10000 / (enemyRadius[tmpY][tmpX] + 1));
 				
 				if (enemyRadius[tmpY][tmpX] < 3) {
 					if (isRoad(tmpY - 1, tmpX) && enemyRadius[tmpY - 1][tmpX] == 0) {
@@ -224,9 +221,9 @@ public class Map {
 	}
 
 	public void printHeuristicMap() {
-		for (int y = 10; y < ROWS; y++) {
+		for (int y = 15; y < ROWS; y++) {
 			for (int x = 65; x <COLS; x++) {
-				System.out.print("     " + heuristicMap[y][x]);
+				System.out.print(" " + heuristicMap[y][x]);
 			}
 
 			System.out.println();
@@ -335,7 +332,7 @@ public class Map {
 			System.out.println();
 		}
 		
-		Thread.sleep(200);
+		Thread.sleep(500);
 	}
 
 	public void moveHarry() {
