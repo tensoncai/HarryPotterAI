@@ -84,7 +84,9 @@ public class Main {
 			m1.calculateMapHeuristics();
 			m1.moveHarry();
 			m1.printMap();
+
 //			m1.printHeuristicMap();
+
 			System.out.println("*************************");
 			steps1--;
 			
@@ -99,3 +101,5 @@ public class Main {
 		}
 	}
 }
+
+
