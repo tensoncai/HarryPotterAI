@@ -15,7 +15,7 @@ public class Map {
 	// 5: Snape
 
 	private final int ROWS = 21;
-	private final int COLS = 80;
+	private final int COLS = 81;
 
 	private int [][] map;
 	private int [][] distFromStart;
@@ -258,7 +258,7 @@ public class Map {
 			map[r][75] = 0;
 		}
 		
-		for (int r = ROWS - 1; r > 10; r--) {
+		for (int r = ROWS - 1; r > 9; r--) {
 			map[r][10] = 0;
 			map[r][20] = 0;
 			map[r][30] = 0;
@@ -314,17 +314,23 @@ public class Map {
 				else if (map[i][j] == 1)
 					System.out.print(" ");
 				else if (map[i][j] == 2)
-					System.out.print("H");
+					System.out.print(ConsoleColors.RED_BOLD + "H" +
+							ConsoleColors.RESET);
 				else if (map[i][j] == 3)
-					System.out.print("P");
+					System.out.print(ConsoleColors.CYAN_BOLD + "P" +
+							ConsoleColors.RESET);
 				else if (map[i][j] == 4)
-					System.out.print("D");
+					System.out.print(ConsoleColors.BLUE_BOLD + "D" +
+							ConsoleColors.RESET);
 				else if (map[i][j] == 5)
-					System.out.print("S");
+					System.out.print(ConsoleColors.BLUE_BOLD + "S" +
+							ConsoleColors.RESET);
 				else if (map[i][j] == 6)
-					System.out.print("L");
+					System.out.print(ConsoleColors.BLUE_BOLD + "L" +
+							ConsoleColors.RESET);
 				else if (map[i][j] == 7)
-					System.out.print("F");
+					System.out.print(ConsoleColors.BLUE_BOLD + "F" +
+							ConsoleColors.RESET);
 			}
 			System.out.println();
 		}
@@ -607,6 +613,31 @@ public class Map {
 			}
 		}
 		return false;
+	}
+	
+	// 0 : not terminated
+	// 1 : harry find the goal
+	// 2 : harry is caught
+	public int isTerminal() {
+		int harryY = harry.getY();
+		int harryX = harry.getX();
+		
+		for (int i = 0; i < catchers.size(); i++) {
+			Catcher catcher = catchers.get(i);
+			int catcherY = catcher.getY();
+			int catcherX = catcher.getX();
+			if (Math.abs(harryX-catcherX) + Math.abs(harryY-catcherY) == 1) {
+				return 2;
+			}
+		}
+		
+		int goalY = peter.getY();
+		int goalX = peter.getX();
+		if(Math.abs(harryX-goalX) + Math.abs(harryY-goalY) == 1) {
+			return 1;
+		}
+	
+		return 0;
 	}
 
 }
