@@ -5,25 +5,6 @@ public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
 
-//		// Melody's code
-//		int steps = 30;
-//		Map m = new Map();
-//
-//		while(steps > 0) {
-//			Catcher tmpCatcher = m.getCatchers().remove(0);
-//			// empty its current location
-//			m.updateMap(tmpCatcher.getY(), tmpCatcher.getX(), 1);
-//			tmpCatcher = m.randomWalk(tmpCatcher);
-//			m.updateMap(tmpCatcher.getY(), tmpCatcher.getX(), 4);
-//			List<Catcher> tmpCatchers = new ArrayList<Catcher>();
-//			tmpCatchers.add(tmpCatcher);
-//			m.setCatchers(tmpCatchers);
-//			m.printMap();
-//			steps--;
-//			System.out.println();
-//		}
-
-        // Tenson's code
 		Goal g = new Goal('P', 78, 19);
 //		Goal g = new Goal('P', 8, 8);
 		Seeker s = new Seeker('H', 61, 16);
@@ -42,7 +23,6 @@ public class Main {
 		Map m1 = new Map(s, catchers, g);
 
 		m1.printMap();
-//		m1.updateDistFromStart(s.getX(), s.getY());
 		m1.updateDistFromGoal(g.getY(), g.getX());
 		
 		m1.calculateMapHeuristics();
@@ -51,34 +31,17 @@ public class Main {
 		int steps1 = 300;
 		
 		while(steps1 > 0) {
-			Catcher tmpCatcher1 = m1.getCatchers().remove(0);
-			Catcher tmpCatcher2 = m1.getCatchers().remove(0);
-			Catcher tmpCatcher3 = m1.getCatchers().remove(0);
-			Catcher tmpCatcher4 = m1.getCatchers().remove(0);
-			
-			
-			m1.updateMap(tmpCatcher1.getY(), tmpCatcher1.getX(), 1);
-			tmpCatcher1 = m1.randomWalk(tmpCatcher1);
-			m1.updateMap(tmpCatcher1.getY(), tmpCatcher1.getX(), 4);
-			
-			m1.updateMap(tmpCatcher2.getY(), tmpCatcher2.getX(), 1);
-			tmpCatcher2 = m1.randomWalk(tmpCatcher2);
-			m1.updateMap(tmpCatcher2.getY(), tmpCatcher2.getX(), 5);
-			
-			m1.updateMap(tmpCatcher3.getY(), tmpCatcher3.getX(), 1);
-			tmpCatcher3 = m1.randomWalk(tmpCatcher3);
-			m1.updateMap(tmpCatcher3.getY(), tmpCatcher3.getX(), 6);
-			
-			m1.updateMap(tmpCatcher4.getY(), tmpCatcher4.getX(), 1);
-			tmpCatcher4 = m1.randomWalk(tmpCatcher4);
-			m1.updateMap(tmpCatcher4.getY(), tmpCatcher4.getX(), 7);
-			
 			
 			List<Catcher> tmpCatchers = new ArrayList<Catcher>();
-			tmpCatchers.add(tmpCatcher1);
-			tmpCatchers.add(tmpCatcher2);
-			tmpCatchers.add(tmpCatcher3);
-			tmpCatchers.add(tmpCatcher4);
+			
+			for (int i = 0; i < m1.getCatchers().size(); i++) {
+				Catcher tmpCatcher = m1.getCatchers().get(i);
+				m1.updateMap(tmpCatcher.getY(), tmpCatcher.getX(), 1);
+				tmpCatcher = m1.randomWalk(tmpCatcher);
+				m1.updateMap(tmpCatcher.getY(), tmpCatcher.getX(), i+4);
+				tmpCatchers.add(tmpCatcher);
+			}
+			
 			m1.setCatchers(tmpCatchers);
 			
 			m1.calculateMapHeuristics();
@@ -100,6 +63,7 @@ public class Main {
 			}
 		}
 	}
+	
 }
 
 
