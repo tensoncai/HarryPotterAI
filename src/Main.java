@@ -54,11 +54,13 @@ public class Main {
 			steps1--;
 			
 			if (m1.isTerminal() == 1) {
-				System.out.println("Congratulations! Harry found Peter (the goal).");
+				System.out.println(ConsoleColors.GREEN_BOLD + "Congratulations! Harry found Peter (the goal)." +
+						ConsoleColors.RESET);
 				break;
 			}
 			else if (m1.isTerminal() == 2) {
-				System.out.println("Sorry. Harry got caught.");
+				System.out.println(ConsoleColors.RED_BOLD + "Sorry. Harry got caught." +
+						ConsoleColors.RESET);
 				break;
 			}
 		}
