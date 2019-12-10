@@ -14,8 +14,8 @@ public class Map {
 	// 4: Dumbledore
 	// 5: Snape
 
-	private final int ROWS = 21;
-	private final int COLS = 81;
+	private final int ROWS = 20;
+	private final int COLS = 30;
 
 	private int [][] map;
 	private int [][] distFromStart;
@@ -33,7 +33,7 @@ public class Map {
 		this.catchers = catchers;
 		peter = g;
 //		initMap1();
-		initMap2();
+		initMap3();
 		distFromStart = new int[ROWS][COLS];
 		distFromGoal = new int[ROWS][COLS];
 		initDistMatrix();
@@ -146,7 +146,7 @@ public class Map {
 			for (int j = 0; j < COLS; j++) {
 				// update heuristic only for road
 				if (isRoad(i,j)) {
-					heuristicMap[i][j] = -10000 / distFromGoal[i][j];
+					heuristicMap[i][j] = -10000 / (distFromGoal[i][j] + 1);
 				}
 			}
 		}
@@ -293,6 +293,62 @@ public class Map {
 		}
 	}
 	
+	// map 3
+	public void initMap3() {	
+		// border
+		for (int i = 0; i < ROWS; i++) {
+			for (int j = 0; j < COLS; j++) {
+				map[i][j] = 1;
+				if (i == 0 || j == 0 || i == ROWS - 1 || j == COLS - 1) {
+					map[i][j] = 0;
+				}
+				if (i == 3) {
+					if (j < 10 || j > 20) {
+						map[i][j] = 0;
+					}
+				}
+				if (i == 6) {
+					if (j > 9 && j < 21) {
+						map[i][j] = 0;
+					}
+				}
+				if (j == 10) {
+					if (i > 5 && i < 12) {
+						map[i][j] = 0;
+					}
+				}
+				if (i == 11) {
+					if (j > 9 && j < 21) {
+						map[i][j] = 0;
+					}
+				}
+				if (j == 20) {
+					if (i > 5 && i < 12) {
+						map[i][j] = 0;
+					}
+				}
+				if (i == 14) {
+					if (j < 10 || j > 20) {
+						map[i][j] = 0;
+					}
+				}
+				if (i == 17) {
+					if (j > 8  && j < 22) {
+						map[i][j] = 0;
+					}
+				}	
+			}
+		}
+
+		map[peter.getY()][peter.getX()] = 3;
+		map[harry.getY()][harry.getX()] = 2;
+		int catNum = 4;
+		for (int i = 0; i < catchers.size(); i++) {
+			map[catchers.get(i).getY()][catchers.get(i).getX()] = catNum;
+			catNum++;
+		}
+	}
+	
 	
 	// justify a location is road or not
 	public boolean isRoad(int x, int y) {
@@ -366,7 +422,7 @@ public class Map {
 			System.out.println();
 		}
 		
-		Thread.sleep(100);
+		Thread.sleep(150);
 	}
 
 	
