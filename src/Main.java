@@ -7,18 +7,25 @@ public class Main {
 
 		Goal g = new Goal('P', 78, 19);
 //		Goal g = new Goal('P', 8, 8);
-		Seeker s = new Seeker('H', 61, 16);
-		Catcher c = new Catcher('D', 75, 17, 1);
-		Catcher snape = new Catcher('S', 66, 15, 1);
+		Seeker s = new Seeker('H', 3, 6);
+		Catcher d = new Catcher('D', 33, 9, 1);
+		Catcher snape = new Catcher('S', 22, 15, 1);
 		Catcher l = new Catcher('L', 69, 18, 1);
-		Catcher f = new Catcher('F', 77, 18, 1);
-		
+		Catcher f = new Catcher('F', 77, 19, 1);
+		Catcher m = new Catcher('M', 48, 9, 1);
+		Catcher b = new Catcher('B', 44, 15, 1);
+		Catcher a = new Catcher('A', 80, 15, 1);
+		Catcher c = new Catcher('C', 76, 17, 1);
 		
 		List<Catcher> catchers = new ArrayList<Catcher>();
-		catchers.add(c);
+		catchers.add(d);
 		catchers.add(snape);
 		catchers.add(l);
 		catchers.add(f);
+		catchers.add(m);
+		catchers.add(b);
+		catchers.add(a);
+		catchers.add(c);
 		
 		Map m1 = new Map(s, catchers, g);
 
@@ -26,7 +33,7 @@ public class Main {
 		m1.updateDistFromGoal(g.getY(), g.getX());
 		
 		m1.calculateMapHeuristics();
-		m1.printHeuristicMap();
+//		m1.printHeuristicMap();
 		
 		int steps1 = 300;
 		
@@ -50,7 +57,7 @@ public class Main {
 
 //			m1.printHeuristicMap();
 
-			System.out.println("*************************");
+			System.out.println();
 			steps1--;
 			
 			if (m1.isTerminal() == 1) {
