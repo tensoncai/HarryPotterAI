@@ -165,7 +165,7 @@ public class Map {
 				int tmpY = tmpLocation.getY();
 				heuristicMap[tmpY][tmpX] = heuristicMap[tmpY][tmpX] + (10000 / (enemyRadius[tmpY][tmpX] + 1));
 				
-				if (enemyRadius[tmpY][tmpX] < 3) {
+				if (enemyRadius[tmpY][tmpX] < 10) {
 					if (isRoad(tmpY - 1, tmpX) && enemyRadius[tmpY - 1][tmpX] == 0) {
 						enemyRadius[tmpY - 1][tmpX] = enemyRadius[tmpY][tmpX] + 1;
 						queue.add(new Location(tmpX, tmpY - 1));
@@ -419,7 +419,7 @@ public class Map {
 			System.out.println();
 		}
 		
-		Thread.sleep(150);
+//		Thread.sleep(150);
 	}
 
 	
